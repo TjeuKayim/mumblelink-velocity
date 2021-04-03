@@ -7,6 +7,7 @@ import com.velocitypowered.api.event.connection.PostLoginEvent;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
+import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import io.netty.buffer.ByteBuf;
@@ -24,8 +25,12 @@ public class MumblePlugin {
     private final Logger logger;
     private final Path dataDirectory;
     private final MinecraftChannelIdentifier channelId = MinecraftChannelIdentifier.create("fabric-mumblelink-mod", "broadcast_mumble_url");
+
+    // TODO: make separate class for configuration
     private String host;
     private int port;
+    private boolean launchOnConnect;
+    private boolean registerCommand;
 
     @Inject
     public MumblePlugin(ProxyServer server, Logger logger, @DataDirectory Path dataDirectory) {
@@ -36,31 +41,44 @@ public class MumblePlugin {
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
-        server.getChannelRegistrar().register(channelId);
         loadConfig(dataDirectory);
+        if (registerCommand) {
+            server.getCommandManager().register("launchmumble", new LaunchCommand(this));
+        }
     }
 
     @Subscribe
     public void onPostLogin(PostLoginEvent event) {
+        if (!launchOnConnect) return;
         logger.info("Sending MumbleLink packet");
-        event.getPlayer().sendPluginMessage(channelId, craftPacket(host, port));
+        Player player = event.getPlayer();
+        sendLaunchMessage(player);
+    }
+
+    public void sendLaunchMessage(Player player) {
+        player.sendPluginMessage(channelId, craftPacket(host, port));
     }
 
     private void loadConfig(Path path) {
         File folder = path.toFile();
-        File file = new File(folder, "mumble-config.toml");
+        File file = new File(folder, "fabric-mumblelink-mod.toml");
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
         }
         if (!file.exists()) {
             logger.warn("Mumble configuration not found");
+            // TODO: Create file with defaults
             return;
         }
         Toml toml = new Toml().read(file);
-        host = toml.getString("host");
-        Long portL = toml.getLong("port");
+        host = toml.getString("mumbleServerHost");
+        Long portL = toml.getLong("mumbleServerPort");
         port = portL == null ? -1 : portL.intValue();
-        logger.warn("Mumble configured host: {}, port: {}", host, port);
+
+        launchOnConnect = toml.getBoolean("launchOnConnect", false);
+        registerCommand = toml.getBoolean("registerCommand", true);
+
+        logger.info("Mumble configured host '{}', port {}, launchOnConnect {}, registerCommand {}", host, port, launchOnConnect, registerCommand);
     }
 
     public static byte[] craftPacket(String host, int port) {
