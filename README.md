@@ -6,6 +6,12 @@ It should be used with the
 client mod v0.7.5 (don't install the Fabric MumbleLink mod server-side, this is a replacement).
 Installing this allows clients to automatically join a VoIP server of your choosing.
 
+## Install
+
+Download plugin JAR [here](https://github.com/TjeuKayim/mumblelink-velocity/releases)
+or build from source with `gradlew build`.
+Move it into the Velocity plugin folder.
+
 ## Configuration
 
 Create a file `./plugins/mumble-link/fabric-mumblelink-mod.toml` like this:
