@@ -3,7 +3,7 @@
 This plugin targets the [Velocity](https://velocitypowered.com) Minecraft server proxy.
 It should be used with the
 [mumble-link-fabric](https://www.curseforge.com/minecraft/mc-mods/mumble-link-fabric)
-client mod v0.7.5 (don't install the Fabric MumbleLink mod server-side, this is a replacement).
+client mod v0.7.5 (don't also install the Fabric MumbleLink mod server-side, this is a replacement).
 Installing this allows clients to automatically join a VoIP server of your choosing.
 
 ## Install
@@ -31,3 +31,9 @@ mumbleServerPort = -1
 
 - [ ] Change context for multi-world support
 - [ ] Implement voipClient, mumbleServerPath and mumbleServerQuery
+
+## Open Source
+
+Credits to Mitchell Skaggs `@magneticflux-` for developing the original
+[fabric-mumblelink-mod](https://github.com/magneticflux-/fabric-mumblelink-mod)
+under the LGPLv3 license.
