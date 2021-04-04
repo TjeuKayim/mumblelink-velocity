@@ -17,7 +17,7 @@ import org.slf4j.Logger;
 import java.io.File;
 import java.nio.file.Path;
 
-@Plugin(id = "mumble-link", name = "MumbleLink Plugin", version = "0.1.0",
+@Plugin(id = "mumble-link", name = "MumbleLink Plugin", version = "0.1.1",
         url = "https://github.com/TjeuKayim/mumblelink-velocity",
         description = "Broadcast to Fabric MumbleLink mod", authors = {"TjeuKayim"})
 public class MumblePlugin {
