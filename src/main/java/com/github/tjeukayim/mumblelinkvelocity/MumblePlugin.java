@@ -50,12 +50,12 @@ public class MumblePlugin {
     @Subscribe
     public void onPostLogin(PostLoginEvent event) {
         if (!launchOnConnect) return;
-        logger.info("Sending MumbleLink packet");
         Player player = event.getPlayer();
         sendLaunchMessage(player);
     }
 
     public void sendLaunchMessage(Player player) {
+        logger.info("Sending MumbleLink packet to {}", player.getUsername());
         player.sendPluginMessage(channelId, craftPacket(host, port));
     }
 
@@ -97,6 +97,7 @@ public class MumblePlugin {
 
         byte[] data = new byte[buf.writerIndex()];
         buf.getBytes(0, data);
+        buf.release();
         return data;
     }
 
