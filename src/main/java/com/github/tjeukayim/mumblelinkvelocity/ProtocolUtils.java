@@ -27,7 +27,7 @@ public class ProtocolUtils {
         }
     }
 
-    public static void writeEnumConstant(ByteBuf buf, Enum e) {
+    public static void writeEnumConstant(ByteBuf buf, Enum<?> e) {
         writeVarInt(buf, e.ordinal());
     }
 }

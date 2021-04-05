@@ -75,8 +75,8 @@ public class MumblePlugin {
         Long portL = toml.getLong("mumbleServerPort");
         port = portL == null ? -1 : portL.intValue();
 
-        launchOnConnect = toml.getBoolean("launchOnConnect", false);
-        registerCommand = toml.getBoolean("registerCommand", true);
+        launchOnConnect = toml.getBoolean("launchOnConnect", true);
+        registerCommand = toml.getBoolean("registerCommand", false);
 
         logger.info("Mumble configured host '{}', port {}, launchOnConnect {}, registerCommand {}", host, port, launchOnConnect, registerCommand);
     }
